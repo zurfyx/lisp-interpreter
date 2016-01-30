@@ -7,7 +7,7 @@ public class Integer implements SExpression {
     public final int value; // Si el definiu privat caldrà un getter
 
     public Integer(int value) {
-        throw new UnsupportedOperationException("not implemented yet");
+        this.value = value;
     }
 
     @Override
