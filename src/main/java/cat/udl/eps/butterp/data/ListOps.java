@@ -1,5 +1,6 @@
 package cat.udl.eps.butterp.data;
 
+import java.util.Arrays;
 import java.util.List;
 
 public class ListOps {
@@ -17,15 +18,21 @@ public class ListOps {
     }
 
     public static SExpression list(SExpression... elems) {
-        throw new UnsupportedOperationException("not implemented yet");
+        return list(Arrays.asList(elems));
     }
 
     public static SExpression list(List<SExpression> elems) {
-        throw new UnsupportedOperationException("not implemented yet");
+        return list(elems, 0);
+    }
+
+    private static SExpression list(List<SExpression> elems, int index) {
+        SExpression nextSExpression = index == elems.length-1 ? Symbol.NIL : list(elems, index+1);
+        return new ConsCell(elems.get(index), nextSExpression);
     }
 
     public static int length(SExpression sexpr) {
-        throw new UnsupportedOperationException("not implemented yet");
+        ConsCell consCell = (ConsCell) sexpr;
+        return consCell.cdr.equals(Symbol.NIL) ? 1 : 1 + length(consCell.cdr);
     }
 
     public static SExpression nth(SExpression sexpr, int n) {
