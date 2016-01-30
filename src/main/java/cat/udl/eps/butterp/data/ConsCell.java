@@ -4,11 +4,12 @@ import cat.udl.eps.butterp.environment.Environment;
 
 public class ConsCell implements SExpression {
 
-    public final SExpression car; // Si el definiu privat caldrà un getter
-    public final SExpression cdr; // Si el definiu privat caldrà un getter
+    public final SExpression car;
+    public final SExpression cdr;
 
     public ConsCell(SExpression car, SExpression cdr) {
-        throw new UnsupportedOperationException("not implemented yet");
+        this.car = car;
+        this.cdr = cdr;
     }
 
     @Override
@@ -18,16 +19,34 @@ public class ConsCell implements SExpression {
 
     @Override
     public boolean equals(Object o) {
-        throw new UnsupportedOperationException("not implemented yet");
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        ConsCell consCell = (ConsCell) o;
+
+        if (car != null ? !car.equals(consCell.car) : consCell.car != null) return false;
+        return cdr != null ? cdr.equals(consCell.cdr) : consCell.cdr == null;
+
     }
 
     @Override
     public int hashCode() {
-        throw new UnsupportedOperationException("not implemented yet");
+        int result = car != null ? car.hashCode() : 0;
+        result = 31 * result + (cdr != null ? cdr.hashCode() : 0);
+        return result;
     }
 
+    // NEEDS TO CHECK
     @Override
     public String toString() {
-        throw new UnsupportedOperationException("not implemented yet");
+        String str = "(" + toStringRec(this) + ")";
+        return str;
+    }
+
+    private String toStringRec(SExpression sExpr){
+        ConsCell consCell = (ConsCell) sExpr;
+        if(consCell.car == Symbol.NIL)
+            return "";
+        return consCell.car.toString() + " " + toStringRec(consCell.cdr);
     }
 }
