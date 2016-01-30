@@ -5,15 +5,15 @@ import java.util.List;
 public class ListOps {
 
     public static SExpression cons(SExpression car, SExpression cdr) {
-        throw new UnsupportedOperationException("not implemented yet");
+        return new ConsCell(car, cdr);
     }
 
     public static SExpression car(SExpression sexpr) {
-        throw new UnsupportedOperationException("not implemented yet");
+        return ((ConsCell) sexpr).car;
     }
 
     public static SExpression cdr(SExpression sexpr) {
-        throw new UnsupportedOperationException("not implemented yet");
+        return ((ConsCell) sexpr).cdr;
     }
 
     public static SExpression list(SExpression... elems) {

@@ -43,7 +43,7 @@ public class ConsCell implements SExpression {
         return str;
     }
 
-    private String toStringRec(SExpression sExpr){
+    private String toStringRec(SExpression sExpr) {
         ConsCell consCell = (ConsCell) sExpr;
         if(consCell.car == Symbol.NIL)
             return "";
