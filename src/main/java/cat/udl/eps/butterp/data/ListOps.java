@@ -36,7 +36,10 @@ public class ListOps {
     }
 
     public static SExpression nth(SExpression sexpr, int n) {
-        throw new UnsupportedOperationException("not implemented yet");
+        ConsCell consCell = (ConsCell) sexpr;
+        if (n == 0) return consCell.car;
+        else if (n > 0 && consCell.car.equals(Symbol.NIL)) return null; // index out of bounds
+        else return nth(sexpr, n-1);
     }
 
     public static boolean isListOf(SExpression params, Class<?> klass) {
