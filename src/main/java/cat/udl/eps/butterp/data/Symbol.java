@@ -7,10 +7,10 @@ public class Symbol implements SExpression {
     public static final Symbol TRUE = new Symbol("t");
     public static final Symbol NIL = new Symbol("nil");
 
-    public final String name; // Si el definiu privat caldrà un getter
+    public final String name;
 
     public Symbol(String name) {
-        throw new UnsupportedOperationException("not implemented yet");
+        this.name = name;
     }
 
     @Override
@@ -20,16 +20,22 @@ public class Symbol implements SExpression {
 
     @Override
     public boolean equals(Object o) {
-        throw new UnsupportedOperationException("not implemented yet");
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        Symbol symbol = (Symbol) o;
+
+        return name != null ? name.equals(symbol.name) : symbol.name == null;
+
     }
 
     @Override
     public int hashCode() {
-        throw new UnsupportedOperationException("not implemented yet");
+        return name != null ? name.hashCode() : 0;
     }
 
     @Override
     public String toString() {
-        throw new UnsupportedOperationException("not implemented yet");
+        return name;
     }
 }

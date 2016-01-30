@@ -4,7 +4,7 @@ import cat.udl.eps.butterp.environment.Environment;
 
 public class Integer implements SExpression {
 
-    public final int value; // Si el definiu privat caldrà un getter
+    public final int value;
 
     public Integer(int value) {
         this.value = value;
