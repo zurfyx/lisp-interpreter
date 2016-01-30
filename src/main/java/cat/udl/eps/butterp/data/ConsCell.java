@@ -39,14 +39,12 @@ public class ConsCell implements SExpression {
     // NEEDS TO CHECK
     @Override
     public String toString() {
-        String str = "(" + toStringRec(this) + ")";
-        return str;
+        return "(" + toStringList(this) + ")";
     }
 
-    private String toStringRec(SExpression sExpr) {
+    private String toStringList(SExpression sExpr) {
         ConsCell consCell = (ConsCell) sExpr;
-        if(consCell.car == Symbol.NIL)
-            return "";
-        return consCell.car.toString() + " " + toStringRec(consCell.cdr);
+        return consCell.cdr.equals(Symbol.NIL) ?
+                consCell.car.toString() : consCell.car + " " + toStringList(consCell.cdr);
     }
 }
