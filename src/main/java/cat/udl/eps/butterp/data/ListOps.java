@@ -26,7 +26,7 @@ public class ListOps {
     }
 
     private static SExpression list(List<SExpression> elems, int index) {
-        SExpression nextSExpression = index == elems.length-1 ? Symbol.NIL : list(elems, index+1);
+        SExpression nextSExpression = index == elems.size()-1 ? Symbol.NIL : list(elems, index+1);
         return new ConsCell(elems.get(index), nextSExpression);
     }
 
