@@ -3,30 +3,45 @@ package cat.udl.eps.butterp.environment;
 import cat.udl.eps.butterp.data.SExpression;
 import cat.udl.eps.butterp.data.Symbol;
 
+import java.util.HashMap;
+
 public class NestedMap implements Environment {
 
-    public NestedMap() {
-        throw new UnsupportedOperationException("not implemented yet");
+    private HashMap<Symbol, SExpression> global = new HashMap<>();
+    private HashMap<Symbol, SExpression> local = new HashMap<>();
+    private NestedMap parent = null;
+
+    public NestedMap() {}
+
+    private NestedMap(NestedMap parent) {
+        this.parent = parent;
+        this.global = parent.global;
     }
 
     @Override
     public void bindGlobal(Symbol symbol, SExpression value) {
-        throw new UnsupportedOperationException("not implemented yet");
+        global.put(symbol, value);
+    }
+
+    private SExpression findParent(NestedMap parent, Symbol symbol) {
+        SExpression localSymbol = parent.local.get(symbol);
+        if (localSymbol != null) return localSymbol;
+        return (parent.parent == null) ? parent.global.get(symbol) : findParent(parent.parent, symbol);
     }
 
     @Override
     public SExpression find(Symbol symbol) {
-        throw new UnsupportedOperationException("not implemented yet");
+        return findParent(this, symbol);
     }
 
     @Override
     public Environment extend() {
-        throw new UnsupportedOperationException("not implemented yet");
+        return new NestedMap(this);
     }
 
     @Override
     public void bind(Symbol symbol, SExpression value) {
-        throw new UnsupportedOperationException("not implemented yet");
+        local.put(symbol, value);
     }
 
 }
