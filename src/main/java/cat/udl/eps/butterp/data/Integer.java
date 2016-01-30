@@ -17,16 +17,23 @@ public class Integer implements SExpression {
 
     @Override
     public boolean equals(Object o) {
-        throw new UnsupportedOperationException("not implemented yet");
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        Integer integer = (Integer) o;
+
+        return value == integer.value;
+
     }
 
     @Override
     public int hashCode() {
-        throw new UnsupportedOperationException("not implemented yet");
+        return value;
     }
 
     @Override
-    public String toString() {
-        throw new UnsupportedOperationException("not implemented yet");
+    public String toString()
+    {
+        return String.valueOf(value);
     }
 }
