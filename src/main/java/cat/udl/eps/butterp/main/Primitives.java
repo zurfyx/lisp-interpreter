@@ -16,7 +16,7 @@ public class Primitives {
             }
 
             private int applyNext(SExpression evargs, Environment env) {
-                if (evargs == Symbol.NIL) return 0;
+                if (evargs.equals(Symbol.NIL)) return 0;
                 ConsCell consCell = (ConsCell) evargs;
                 if (!(consCell.car instanceof ConsCell))
                     throw new EvaluationError("NotInteger");

@@ -31,14 +31,10 @@ public class ListOps {
     }
 
     public static int length(SExpression sexpr) {
+        if (sexpr.equals(Symbol.NIL))
+            return 0;
         ConsCell consCell = (ConsCell) sexpr;
-        if (consCell.car.equals(Symbol.NIL) && consCell.cdr.equals(Symbol.NIL)) return 0;
-        return recursiveLength(consCell);
-    }
-
-    private static int recursiveLength(SExpression sexpr) {
-        ConsCell consCell = (ConsCell) sexpr;
-        return consCell.cdr.equals(Symbol.NIL) ? 1 : 1 + length(consCell.cdr);
+        return 1 + length(consCell.cdr);
     }
 
     public static SExpression nth(SExpression sexpr, int n) {
