@@ -5,7 +5,7 @@ import cat.udl.eps.butterp.environment.Environment;
 public abstract class Special implements SExpression {
     @Override
     public SExpression eval(Environment env) {
-        throw new UnsupportedOperationException("not implemented yet");
+        return this;
     }
 
     public abstract SExpression applySpecial(SExpression args, Environment env);
