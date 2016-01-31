@@ -6,7 +6,7 @@ public abstract class Function implements SExpression {
 
     @Override
     public SExpression eval(Environment env) {
-        throw new UnsupportedOperationException("not implemented yet");
+        return this;
     }
 
     public abstract SExpression apply(SExpression evargs, Environment env);
