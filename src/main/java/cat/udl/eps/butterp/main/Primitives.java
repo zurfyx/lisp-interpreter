@@ -18,7 +18,8 @@ public class Primitives {
                 }
 
                 ConsCell consCell = (ConsCell) evargs;
-                return sum(consCell.car, apply(consCell.cdr, env), env);
+                SExpression value = consCell.car.eval(env);
+                return sum(value, apply(consCell.cdr, env), env);
             }
 
             private SExpression sum(SExpression x, SExpression y, Environment env) {
@@ -44,7 +45,8 @@ public class Primitives {
                 }
 
                 ConsCell consCell = (ConsCell) evargs;
-                return mult(consCell.car, apply(consCell.cdr, env), env);
+                SExpression value = consCell.car.eval(env);
+                return mult(value, apply(consCell.cdr, env), env);
             }
 
             private SExpression mult(SExpression x, SExpression y, Environment env) {
