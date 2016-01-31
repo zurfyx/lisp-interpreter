@@ -31,8 +31,10 @@ public class ListOps {
     }
 
     public static int length(SExpression sexpr) {
-        if (sexpr.equals(Symbol.NIL))
+        if (sexpr.equals(Symbol.NIL)) {
             return 0;
+        }
+
         ConsCell consCell = (ConsCell) sexpr;
         return 1 + length(consCell.cdr);
     }

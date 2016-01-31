@@ -25,8 +25,9 @@ public class NestedMap implements Environment {
     }
 
     private SExpression getGlobalValue(Symbol symbol) {
-        if (!global.containsKey(symbol))
+        if (!global.containsKey(symbol)) {
             throw new EvaluationError("NotExists");
+        }
         return global.get(symbol);
     }
 
