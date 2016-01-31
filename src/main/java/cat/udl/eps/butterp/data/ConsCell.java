@@ -36,7 +36,6 @@ public class ConsCell implements SExpression {
         return result;
     }
 
-    // NEEDS TO CHECK
     @Override
     public String toString() {
         return "(" + toStringList(this) + ")";

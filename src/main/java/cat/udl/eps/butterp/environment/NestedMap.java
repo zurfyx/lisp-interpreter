@@ -26,7 +26,8 @@ public class NestedMap implements Environment {
     private SExpression findParent(NestedMap parent, Symbol symbol) {
         SExpression localSymbol = parent.local.get(symbol);
         if (localSymbol != null) return localSymbol;
-        return (parent.parent == null) ? parent.global.get(symbol) : findParent(parent.parent, symbol);
+        else if (parent.parent == null) return parent.global.containsKey(symbol) ? parent.global.get(symbol) : Symbol.NIL;
+        else return findParent(parent.parent, symbol);
     }
 
     @Override
