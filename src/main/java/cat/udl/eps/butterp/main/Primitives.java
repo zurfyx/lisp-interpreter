@@ -12,15 +12,16 @@ public class Primitives {
         env.bindGlobal(new Symbol("add"), new Function() {
             @Override
             public SExpression apply(SExpression evargs, Environment env) {
-                return applyNext(evargs, env);
+                return new Integer(applyNext(evargs, env));
             }
 
-            private SExpression applyNext(SExpression evargs, Environment env) {
-                ConsCell args = (ConsCell) evargs;
-                if (ListOps.length(args) == 0) return new Integer(0);
-                if (!(args.car instanceof Integer))
-
-                if (args.cdr.equals(Symbol.NIL)) return args.car.value;
+            private int applyNext(SExpression evargs, Environment env) {
+                if (evargs == Symbol.NIL) return 0;
+                ConsCell consCell = (ConsCell) evargs;
+                if (!(consCell.car instanceof ConsCell))
+                    throw new EvaluationError("NotInteger");
+                Integer value = (Integer) consCell.car;
+                return value + applyNext(evargs.cdr, env);
             }
         });
 
