@@ -13,24 +13,51 @@ public class Primitives {
         env.bindGlobal(new Symbol("add"), new Function() {
             @Override
             public SExpression apply(SExpression evargs, Environment env) {
-                return new Integer(applyNext(evargs, env));
-            }
-
-            private int applyNext(SExpression evargs, Environment env) {
                 if (evargs.equals(Symbol.NIL)) {
-                    return 0;
+                    return new Integer(0);
                 }
 
                 ConsCell consCell = (ConsCell) evargs;
-                int value = getConsCellInteger(consCell, env);
-                return value + applyNext(consCell.cdr, env);
+                return sum(consCell.car, apply(consCell.cdr, env), env);
             }
 
-            private int getConsCellInteger(ConsCell consCell, Environment env) {
-                if (!(consCell.car instanceof Integer)) {
+            private SExpression sum(SExpression x, SExpression y, Environment env) {
+                int xInt = castInteger(x, env);
+                int yInt = castInteger(y, env);
+                return new Integer(xInt + yInt);
+            }
+
+            private int castInteger(SExpression sExpression, Environment env) {
+                if (!(sExpression instanceof Integer)) {
                     throw new EvaluationError("NotInteger");
                 }
-                int value = ((Integer) consCell.car).value;
+                int value = ((Integer) sExpression).value;
+                return value;
+            }
+        });
+
+        env.bindGlobal(new Symbol("mult"), new Function() {
+            @Override
+            public SExpression apply(SExpression evargs, Environment env) {
+                if (evargs.equals(Symbol.NIL)) {
+                    return new Integer(1);
+                }
+
+                ConsCell consCell = (ConsCell) evargs;
+                return mult(consCell.car, apply(consCell.cdr, env), env);
+            }
+
+            private SExpression mult(SExpression x, SExpression y, Environment env) {
+                int xInt = castInteger(x, env);
+                int yInt = castInteger(y, env);
+                return new Integer(xInt * yInt);
+            }
+
+            private int castInteger(SExpression sExpression, Environment env) {
+                if (!(sExpression instanceof Integer)) {
+                    throw new EvaluationError("NotInteger");
+                }
+                int value = ((Integer) sExpression).value;
                 return value;
             }
         });
