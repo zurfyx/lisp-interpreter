@@ -1,5 +1,6 @@
 package cat.udl.eps.butterp.environment;
 
+import cat.udl.eps.butterp.data.EvaluationError;
 import cat.udl.eps.butterp.data.SExpression;
 import cat.udl.eps.butterp.data.Symbol;
 
@@ -23,11 +24,17 @@ public class NestedMap implements Environment {
         global.put(symbol, value);
     }
 
-    private SExpression findParent(NestedMap parent, Symbol symbol) {
+    private SExpression findParent(NestedMap parent, Symbol symbol) throws EvaluationError {
         SExpression localSymbol = parent.local.get(symbol);
-        if (localSymbol != null) return localSymbol;
-        else if (parent.parent == null) return parent.global.containsKey(symbol) ? parent.global.get(symbol) : Symbol.NIL;
-        else return findParent(parent.parent, symbol);
+        if (localSymbol != null) {
+            return localSymbol;
+        } else if (parent.parent == null) { // no more local HashMaps to check
+            if (!parent.global.containsKey(symbol))
+                throw new EvaluationError("NotExists");
+            return parent.global.get(symbol);
+        } else {
+            return findParent(parent.parent, symbol);
+        }
     }
 
     @Override
