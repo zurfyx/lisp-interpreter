@@ -14,7 +14,9 @@ public class ConsCell implements SExpression {
 
     @Override
     public SExpression eval(Environment env) {
-        throw new UnsupportedOperationException("not implemented yet");
+        Symbol carSymbol = (Symbol) car; // symbol that represents the function (i.e add)
+        Function carFunction = (Function) env.find(carSymbol);
+        return carFunction.apply(cdr, env);
     }
 
     @Override

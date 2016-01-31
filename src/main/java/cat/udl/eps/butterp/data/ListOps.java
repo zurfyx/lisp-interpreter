@@ -41,7 +41,7 @@ public class ListOps {
 
     public static SExpression nth(SExpression sexpr, int n) {
         ConsCell consCell = (ConsCell) sexpr;
-        return n == 0 ? consCell.car : nth(sexpr.cdr, n-1);
+        return n == 0 ? consCell.car : nth(consCell.cdr, n-1);
     }
 
     public static boolean isListOf(SExpression params, Class<?> klass) {

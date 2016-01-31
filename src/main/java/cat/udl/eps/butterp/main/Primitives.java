@@ -27,7 +27,7 @@ public class Primitives {
             }
 
             private int getConsCellInteger(ConsCell consCell, Environment env) {
-                if (!(consCell.car instanceof ConsCell)) {
+                if (!(consCell.car instanceof Integer)) {
                     throw new EvaluationError("NotInteger");
                 }
                 int value = ((Integer) consCell.car).value;
