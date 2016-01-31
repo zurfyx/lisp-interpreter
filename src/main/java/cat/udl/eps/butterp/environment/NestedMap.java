@@ -24,14 +24,18 @@ public class NestedMap implements Environment {
         global.put(symbol, value);
     }
 
-    private SExpression findParent(NestedMap parent, Symbol symbol) throws EvaluationError {
+    private SExpression getGlobalValue(Symbol symbol) {
+        if (!global.containsKey(symbol))
+            throw new EvaluationError("NotExists");
+        return global.get(symbol);
+    }
+
+    private SExpression findParent(NestedMap parent, Symbol symbol) {
         SExpression localSymbol = parent.local.get(symbol);
         if (localSymbol != null) {
             return localSymbol;
         } else if (parent.parent == null) { // no more local HashMaps to check
-            if (!parent.global.containsKey(symbol))
-                throw new EvaluationError("NotExists");
-            return parent.global.get(symbol);
+            return parent.getGlobalValue(symbol);
         } else {
             return findParent(parent.parent, symbol);
         }
