@@ -12,7 +12,7 @@ public class Integer implements SExpression {
 
     @Override
     public SExpression eval(Environment env) {
-        throw new UnsupportedOperationException("not implemented yet");
+        return this;
     }
 
     @Override
