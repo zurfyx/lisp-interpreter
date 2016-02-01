@@ -273,7 +273,7 @@ public class PrimitivesTest {
     }
 
     @Test(expected = EvaluationError.class)
-    public void define_two_many_args() {
+    public void define_too_many_args() {
         assertEvalFails("(define 1 2 3 4)");
     }
 
@@ -284,6 +284,12 @@ public class PrimitivesTest {
 
     @Test
     public void define_symbol() {
+        assertEvalTo("(define A 2)", "nil");
+        assertEvalTo("A", "2");
+    }
+
+    @Test
+    public void define_symbol_from_operation() {
         assertEvalTo("(define N (add 1 2))", "nil");
         assertEvalTo("N", "3");
     }

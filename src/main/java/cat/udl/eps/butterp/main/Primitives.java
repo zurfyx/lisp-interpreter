@@ -62,6 +62,32 @@ public class Primitives {
             }
         });
 
+        env.bindGlobal(new Symbol("define"), new Special() {
+            @Override
+            public SExpression applySpecial(SExpression evargs, Environment env) {
+                if (ListOps.length(evargs) != 2) {
+                    throw new EvaluationError("WrongNumberOfArguments");
+                }
+
+                ConsCell consCell = (ConsCell) evargs;
+                Symbol key = castSymbol(consCell.car);
+                SExpression value = ((ConsCell)consCell.cdr).car.eval(env);
+
+                //save definition
+                env.bindGlobal(key, value);
+
+                return Symbol.NIL;
+            }
+
+            private Symbol castSymbol(SExpression sExpression) {
+                if (!(sExpression instanceof Symbol)) {
+                    throw new EvaluationError("NotSymbol");
+                }
+
+                return (Symbol) sExpression;
+            }
+        });
+
         /*
 
         An example of a predefined Function:
