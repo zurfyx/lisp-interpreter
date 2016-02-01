@@ -88,6 +88,22 @@ public class Primitives {
             }
         });
 
+        env.bindGlobal(new Symbol("car"), new Function() {
+            @Override
+            public SExpression apply(SExpression evargs, Environment env) {
+                checkEvargs(evargs);
+
+                ConsCell consCell = (ConsCell) evargs;
+
+            }
+
+            private void checkEvargs(SExpression evargs) {
+                if (!(evargs instanceof ConsCell)) {
+                    throw new EvaluationError("ArgumentIsNotList");
+                }
+            }
+        });
+
         env.bindGlobal(new Symbol("define"), new Special() {
             @Override
             public SExpression applySpecial(SExpression evargs, Environment env) {
