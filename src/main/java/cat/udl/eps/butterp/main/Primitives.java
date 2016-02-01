@@ -91,16 +91,40 @@ public class Primitives {
         env.bindGlobal(new Symbol("car"), new Function() {
             @Override
             public SExpression apply(SExpression evargs, Environment env) {
-                checkEvargs(evargs);
+                if (ListOps.length(evargs) != 1) {
+                    throw new EvaluationError("WrongNumberOfArguments");
+                }
 
                 ConsCell consCell = (ConsCell) evargs;
-
+                SExpression list = consCell.car;
+                return getFirstElementOfList(list);
             }
 
-            private void checkEvargs(SExpression evargs) {
-                if (!(evargs instanceof ConsCell)) {
-                    throw new EvaluationError("ArgumentIsNotList");
+            private SExpression getFirstElementOfList(SExpression list) {
+                if (!(list instanceof ConsCell)) {
+                    throw new EvaluationError("NotList");
                 }
+                return ((ConsCell)list).car;
+            }
+        });
+
+        env.bindGlobal(new Symbol("cdr"), new Function() {
+            @Override
+            public SExpression apply(SExpression evargs, Environment env) {
+                if (ListOps.length(evargs) != 1) {
+                    throw new EvaluationError("WrongNumberOfArguments");
+                }
+
+                ConsCell consCell = (ConsCell) evargs;
+                SExpression list = consCell.car;
+                return getFirstElementOfList(list);
+            }
+
+            public SExpression getFirstElementOfList(SExpression list) {
+                if (!(list instanceof ConsCell)) {
+                    throw new EvaluationError("NotList");
+                }
+                return ((ConsCell)list).cdr;
             }
         });
 
