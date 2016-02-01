@@ -197,9 +197,9 @@ public class Primitives {
                 ConsCell consCell = (ConsCell) args;
                 SExpression condition = consCell.car.eval(env);
                 if (!(condition.equals(Symbol.NIL))) {
-                    return ListOps.nth(consCell, 2).eval(env);
-                } else {
                     return ListOps.nth(consCell, 1).eval(env);
+                } else {
+                    return ListOps.nth(consCell, 2).eval(env);
                 }
             }
         });
