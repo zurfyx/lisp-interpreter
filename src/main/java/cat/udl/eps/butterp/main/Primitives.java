@@ -135,6 +135,21 @@ public class Primitives {
             }
         });
 
+        env.bindGlobal(new Symbol("eq"), new Function() {
+            @Override
+            public SExpression apply(SExpression evargs, Environment env) {
+                if (ListOps.length(evargs) != 2) {
+                    throw new EvaluationError("WrongNumberOfArguments");
+                }
+
+                ConsCell consCell = (ConsCell) evargs;
+                SExpression firstVal = consCell.car;
+                SExpression secondVal = ((ConsCell)consCell.cdr).car;
+
+                return firstVal.equals(secondVal) ? Symbol.TRUE : Symbol.NIL;
+            }
+        });
+
         env.bindGlobal(new Symbol("define"), new Special() {
             @Override
             public SExpression applySpecial(SExpression evargs, Environment env) {
