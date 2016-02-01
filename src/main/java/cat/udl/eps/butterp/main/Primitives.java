@@ -128,6 +128,13 @@ public class Primitives {
             }
         });
 
+        env.bindGlobal(new Symbol("list"), new Function() {
+            @Override
+            public SExpression apply(SExpression evargs, Environment env) {
+                return evargs;
+            }
+        });
+
         env.bindGlobal(new Symbol("define"), new Special() {
             @Override
             public SExpression applySpecial(SExpression evargs, Environment env) {
