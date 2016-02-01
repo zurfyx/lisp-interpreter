@@ -62,6 +62,32 @@ public class Primitives {
             }
         });
 
+        env.bindGlobal(new Symbol("cons"), new Function() {
+            @Override
+            public SExpression apply(SExpression evargs, Environment env) {
+                if (ListOps.length(evargs) != 2) {
+                    throw new EvaluationError("WrongNumberOfArguments");
+                }
+
+                ConsCell consCell = (ConsCell) evargs;
+                SExpression newElement = consCell.car;
+                SExpression list = ((ConsCell)consCell.cdr).car;
+
+                return addElementToList(newElement, list);
+            }
+
+            private boolean isList(SExpression list) {
+                return list.equals(Symbol.NIL) || list instanceof ConsCell;
+            }
+
+            private SExpression addElementToList(SExpression element, SExpression list) {
+                if (!isList(list)) {
+                    throw new EvaluationError("SecondArgumentIsNotList");
+                }
+                return new ConsCell(element, list);
+            }
+        });
+
         env.bindGlobal(new Symbol("define"), new Special() {
             @Override
             public SExpression applySpecial(SExpression evargs, Environment env) {
