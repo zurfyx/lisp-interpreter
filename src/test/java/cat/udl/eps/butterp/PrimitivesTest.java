@@ -294,6 +294,26 @@ public class PrimitivesTest {
         assertEvalTo("N", "3");
     }
 
+    @Test(expected = EvaluationError.class)
+    public void quote_no_args() {
+        assertEvalFails("(quote)");
+    }
+
+    @Test(expected = EvaluationError.class)
+    public void quote_too_many_args() {
+        assertEvalFails("(quote 1 2)");
+    }
+
+    @Test
+    public void quote_integer() {
+        assertEvalTo("(quote 1)", "1");
+    }
+
+    @Test
+    public void quote_list() {
+        assertEvalTo("(quote (1 2))", "(1 2)");
+    }
+
     @Test
     public void mult_no_arg() {
         assertEvalTo("(mult)", "1");

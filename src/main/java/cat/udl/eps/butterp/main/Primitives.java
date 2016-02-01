@@ -88,31 +88,15 @@ public class Primitives {
             }
         });
 
-        /*
-
-        An example of a predefined Function:
-
-        env.bindGlobal(new Symbol("function"), new Function() {
+        env.bindGlobal(new Symbol("quote"), new Special() {
             @Override
-            public SExpression apply(SExpression evargs, Environment env) {
-                throw new UnsupportedOperationException("not implemented yet");
+            public SExpression applySpecial(SExpression evargs, Environment env) {
+                if (ListOps.length(evargs) != 1) {
+                    throw new EvaluationError("WrongNumberOfArguments");
+                }
+
+                return ((ConsCell)evargs).car;
             }
         });
-
-        */
-
-        /*
-
-        An example of a predefined Special:
-
-        env.bindGlobal(new Symbol("special"), new Special() {
-            @Override
-            public SExpression applySpecial(SExpression args, Environment env) {
-                throw new UnsupportedOperationException("not implemented yet");
-            }
-        });
-
-        */
-
     }
 }
