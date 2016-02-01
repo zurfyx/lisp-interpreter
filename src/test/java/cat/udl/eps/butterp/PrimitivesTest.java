@@ -214,6 +214,8 @@ public class PrimitivesTest {
 
     @Test
     public void eq_complex_false() {
+        assertEvalTo("(quote (1 2 (3) 5 (6)))", "(1 2 (3) 5 (6))");
+        assertEvalTo("(quote (1 2 (3 4) 5 (6)))", "(1 2 (3 4) 5 (6))");
         assertEvalTo("(eq (quote (1 2 (3) 5 (6))) (quote (1 2 (3 4) 5 (6))))", "nil");
     }
 

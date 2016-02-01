@@ -47,8 +47,8 @@ public class ConsCell implements SExpression {
 
         ConsCell consCell = (ConsCell) o;
 
-        return car != null ? car.equals(consCell.car) : consCell.car == null &&
-                (cdr != null ? cdr.equals(consCell.cdr) : consCell.cdr == null);
+        if (car != null ? !car.equals(consCell.car) : consCell.car != null) return false;
+        return cdr != null ? cdr.equals(consCell.cdr) : consCell.cdr == null;
 
     }
 
