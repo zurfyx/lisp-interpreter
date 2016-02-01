@@ -14,9 +14,30 @@ public class ConsCell implements SExpression {
 
     @Override
     public SExpression eval(Environment env) {
-        Symbol carSymbol = (Symbol) car; // symbol that represents the function (i.e add)
-        Function carFunction = (Function) env.find(carSymbol);
-        return carFunction.apply(cdr, env);
+        Symbol carSymbol = (Symbol) car; // symbol that represents the expression(i.e func. add)
+        SExpression carExpression = env.find(carSymbol);
+        if (carExpression instanceof Function) {
+            return evalFunction((Function) carExpression, env);
+        } else {
+            return evalSpecial((Special) carExpression, env);
+        }
+    }
+
+    private SExpression evalFunction(Function function, Environment env) {
+        SExpression cdrEvaluated = evalFunctionElements(cdr, env);
+        return function.apply(cdrEvaluated, env);
+    }
+
+    private SExpression evalFunctionElements(SExpression parent, Environment env) {
+        if (parent.equals(Symbol.NIL)) return Symbol.NIL;
+
+        ConsCell consCell = (ConsCell) parent;
+        SExpression carEvaluated = consCell.car.eval(env);
+        return new ConsCell(carEvaluated, evalFunctionElements(consCell.cdr, env));
+    }
+
+    public SExpression evalSpecial(Special special, Environment env) {
+        return special.applySpecial(cdr, env);
     }
 
     @Override
@@ -26,8 +47,8 @@ public class ConsCell implements SExpression {
 
         ConsCell consCell = (ConsCell) o;
 
-        if (car != null ? !car.equals(consCell.car) : consCell.car != null) return false;
-        return cdr != null ? cdr.equals(consCell.cdr) : consCell.cdr == null;
+        return car != null ? car.equals(consCell.car) : consCell.car == null &&
+                (cdr != null ? cdr.equals(consCell.cdr) : consCell.cdr == null);
 
     }
 

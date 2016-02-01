@@ -18,7 +18,7 @@ public class Primitives {
                 }
 
                 ConsCell consCell = (ConsCell) evargs;
-                SExpression value = consCell.car.eval(env);
+                SExpression value = consCell.car;
                 return sum(value, apply(consCell.cdr, env), env);
             }
 
@@ -32,8 +32,7 @@ public class Primitives {
                 if (!(sExpression instanceof Integer)) {
                     throw new EvaluationError("NotInteger");
                 }
-                int value = ((Integer) sExpression).value;
-                return value;
+                return ((Integer) sExpression).value;
             }
         });
 
@@ -45,7 +44,7 @@ public class Primitives {
                 }
 
                 ConsCell consCell = (ConsCell) evargs;
-                SExpression value = consCell.car.eval(env);
+                SExpression value = consCell.car;
                 return mult(value, apply(consCell.cdr, env), env);
             }
 
@@ -59,8 +58,7 @@ public class Primitives {
                 if (!(sExpression instanceof Integer)) {
                     throw new EvaluationError("NotInteger");
                 }
-                int value = ((Integer) sExpression).value;
-                return value;
+                return ((Integer) sExpression).value;
             }
         });
 
