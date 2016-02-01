@@ -117,10 +117,10 @@ public class Primitives {
 
                 ConsCell consCell = (ConsCell) evargs;
                 SExpression list = consCell.car;
-                return getFirstElementOfList(list);
+                return getAllElementsButFirstOfList(list);
             }
 
-            public SExpression getFirstElementOfList(SExpression list) {
+            public SExpression getAllElementsButFirstOfList(SExpression list) {
                 if (!(list instanceof ConsCell)) {
                     throw new EvaluationError("NotList");
                 }
