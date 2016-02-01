@@ -88,6 +88,26 @@ public class Primitives {
             }
         });
 
+        env.bindGlobal(new Symbol("cdr"), new Function() {
+            @Override
+            public SExpression apply(SExpression evargs, Environment env) {
+                if (ListOps.length(evargs) != 1) {
+                    throw new EvaluationError("WrongNumberOfArguments");
+                }
+
+                ConsCell consCell = (ConsCell) evargs;
+                SExpression list = consCell.car;
+                return getFirstElementOfList(list);
+            }
+
+            public SExpression getFirstElementOfList(SExpression list) {
+                if (!(list instanceof ConsCell)) {
+                    throw new EvaluationError("NotList");
+                }
+                return ((ConsCell)list).cdr;
+            }
+        });
+
         env.bindGlobal(new Symbol("define"), new Special() {
             @Override
             public SExpression applySpecial(SExpression evargs, Environment env) {
