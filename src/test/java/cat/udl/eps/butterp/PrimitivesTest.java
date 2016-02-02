@@ -425,8 +425,28 @@ public class PrimitivesTest {
         assertEvalFails("(apply car '(1 2) '(3 4))");
     }
 
+    @Test(expected = EvaluationError.class)
+    public void apply_not_function() {
+        assertEvalFails("(apply 1 '(1 2))");
+    }
+
+    @Test(expected = EvaluationError.class)
+    public void apply_not_list() {
+        assertEvalFails("(apply add 1)");
+    }
+
     @Test public void apply_ok() {
         assertEvalTo("(apply add '(1 2 3 4))", "10");
+    }
+
+    @Test
+    public void apply_empty_list() {
+        assertEvalTo("(apply add '())", "0");
+    }
+
+    @Test
+    public void apply_complex() {
+        assertEvalTo("(apply (lambda (n) (add n 1)) (quote (2)))", "3");
     }
 
     @Test public void list_no_arg() {
