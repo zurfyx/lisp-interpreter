@@ -163,13 +163,18 @@ public class PrimitivesTest {
     }
 
     @Test
-    public void lambda_generates_function() { // DELETE ME
-        assertEvalTo("(lambda () 3)", "1");
+    public void lambda_constantly_one() {
+        assertEvalTo("((lambda () 1))", "1");
     }
 
     @Test
-    public void lambda_constantly_one() {
-        assertEvalTo("((lambda () 1))", "1");
+    public void lambda_no_parameters() {
+        assertEvalTo("((lambda () (add 1 2)))", "3");
+    }
+
+    @Test
+    public void lambda_equal_to_parameter() {
+        assertEvalTo("((lambda (x) x) 3)", "3");
     }
 
     @Test
@@ -184,8 +189,25 @@ public class PrimitivesTest {
 
     @Test
     public void lambda_func_param() {
+        assertEvalTo("(quote (1 2))", "(1 2)");
         assertEvalTo("((lambda (F A) (F A)) car (quote (1 2)))", "1");
     }
+
+    @Test
+    public void lambda_environment() {
+        assertEvalTo("(define two (lambda (x) x))", "nil");
+        assertEvalTo("(define x 2)", "nil");
+        assertEvalTo("(two x)", "2");
+        assertEvalTo("(define y 1)", "nil");
+        assertEvalTo("(two 1)", "1");
+    }
+
+    @Test
+    public void lambda_environment2() {
+        assertEvalTo("(define tres 3)", "nil");
+        assertEvalTo("((lambda (x) ((lambda (tres) (add tres -3)) (add x tres))) 10)", "10");
+    }
+
 
     @Test(expected = EvaluationError.class)
     public void eq_no_args() {

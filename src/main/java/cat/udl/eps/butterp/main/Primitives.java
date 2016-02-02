@@ -213,16 +213,20 @@ public class Primitives {
 
                 SExpression sExpression = evargs;
                 SExpression params = ListOps.nth(sExpression, 0);
-                SExpression body = ListOps.nth(sExpression, 1).eval(env);
-                if (!isList(params)) {
+                SExpression body = ListOps.nth(sExpression, 1);
+                if (!isList(params)) { // || !isNotListOfSymbols(params)
                     throw new EvaluationError("NoList");
                 }
 
-                return Symbol.NIL;
+                return createLambda(params, body, env);
             }
 
             private boolean isList(SExpression list) {
                 return list.equals(Symbol.NIL) || list instanceof ConsCell;
+            }
+
+            private Lambda createLambda(SExpression params, SExpression body, Environment env) {
+                return new Lambda(params, body, env);
             }
         });
     }

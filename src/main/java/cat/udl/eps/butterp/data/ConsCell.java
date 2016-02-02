@@ -14,12 +14,14 @@ public class ConsCell implements SExpression {
 
     @Override
     public SExpression eval(Environment env) {
-        Symbol carSymbol = (Symbol) car; // symbol that represents the expression(i.e func. add)
-        SExpression carExpression = env.find(carSymbol);
-        if (carExpression instanceof Function) {
-            return evalFunction((Function) carExpression, env);
+        System.out.println(car);
+        SExpression carSExpression = car.eval(env); // (i.e. func. add)
+        if (carSExpression instanceof Function) {
+            return evalFunction((Function) carSExpression, env);
+        } else if (carSExpression instanceof Special) {
+            return evalSpecial((Special) carSExpression, env);
         } else {
-            return evalSpecial((Special) carExpression, env);
+            throw new EvaluationError("CannotApply");
         }
     }
 

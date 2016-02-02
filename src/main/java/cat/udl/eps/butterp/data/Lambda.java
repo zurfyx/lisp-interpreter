@@ -11,25 +11,31 @@ public class Lambda extends Function {
     public Lambda(SExpression params, SExpression body, Environment definitionEnv) {
         this.params = params;
         this.body = body;
-        this.definitionEnv = definitionEnv;
+        this.definitionEnv = definitionEnv; // this should be extended of definitionEnv
     }
 
     @Override
     public SExpression apply(SExpression evargs, Environment callingEnv) {
-        if (ListOps.length(evargs) != ListOps.length(this.params)) {
+        if (definitionEnv == callingEnv) System.out.println("good");
+        if (ListOps.length(evargs) != ListOps.length(params)) {
             throw new EvaluationError("WrongNumberOfArguments");
         }
-        Environment newEnv = callingEnv;
-        ConsCell args = (ConsCell) evargs;
-        ConsCell params = (ConsCell) this.params;
-        bindParams(args, params, newEnv);
-        return this.body.eval(newEnv);
+
+        if (!params.equals(Symbol.NIL)) { // has params
+            ConsCell evargsList = (ConsCell) evargs;
+            bindParams(evargsList);
+        }
+
+        return body.eval(definitionEnv);
     }
 
-    // maybe it could be improved
-    private void bindParams(ConsCell evargs, ConsCell params, Environment env) {
+    private void bindParams(ConsCell evargs) {
+        System.out.println(evargs);
         for (int i = 0; i < ListOps.length(evargs); i++) {
-            env.bind(new Symbol(ListOps.nth(params, i).toString()), ListOps.nth(evargs, i));
+            Symbol param = (Symbol) ListOps.nth(params, i);
+            System.out.println("-> "+ListOps.nth(evargs, i));
+            SExpression value = ListOps.nth(evargs, i);
+            definitionEnv.bind(param, value);
         }
     }
 }

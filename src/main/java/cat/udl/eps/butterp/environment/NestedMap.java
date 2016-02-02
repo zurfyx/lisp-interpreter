@@ -44,6 +44,7 @@ public class NestedMap implements Environment {
 
     @Override
     public SExpression find(Symbol symbol) {
+        System.out.println(symbol);
         return findParent(this, symbol);
     }
 
