@@ -26,8 +26,10 @@ public class ListOps {
     }
 
     private static SExpression list(List<SExpression> elems, int index) {
-        SExpression nextSExpression = (index == elems.size()-1) ? Symbol.NIL : list(elems, index+1);
-        return new ConsCell(elems.get(index), nextSExpression);
+        if (index >= elems.size()) {
+            return Symbol.NIL;
+        }
+        return new ConsCell(elems.get(index), list(elems, index+1));
     }
 
     public static int length(SExpression sexpr) {

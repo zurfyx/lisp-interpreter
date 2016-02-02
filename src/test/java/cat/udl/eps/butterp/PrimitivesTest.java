@@ -163,6 +163,11 @@ public class PrimitivesTest {
     }
 
     @Test
+    public void lambda_generates_function() { // DELETE ME
+        assertEvalTo("(lambda () 3)", "1");
+    }
+
+    @Test
     public void lambda_constantly_one() {
         assertEvalTo("((lambda () 1))", "1");
     }
@@ -252,6 +257,21 @@ public class PrimitivesTest {
     @Test
     public void add_no_arg() {
         assertEvalTo("(add)", "0");
+    }
+
+    @Test
+    public void add_one_arg() {
+        assertEvalTo("(add 1)", "1");
+    }
+
+    @Test
+    public void add_two_args() {
+        assertEvalTo("(add 4 2)", "6");
+    }
+
+    @Test
+    public void add_three_args() {
+        assertEvalTo("(add 1 2 3)", "6");
     }
 
     @Test
