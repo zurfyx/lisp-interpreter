@@ -10,6 +10,7 @@ public class Lambda extends Function {
     private SExpression body;
     private Environment definitionEnv;
 
+
     public Lambda(SExpression params, SExpression body, Environment definitionEnv) {
         if (!(params instanceof ConsCell)) {
             throw new EvaluationError("WrongNumberOfArguments");

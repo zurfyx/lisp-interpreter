@@ -203,5 +203,27 @@ public class Primitives {
                 }
             }
         });
+
+        env.bindGlobal(new Symbol("lambda"), new Special() {
+            @Override
+            public SExpression applySpecial(SExpression evargs, Environment env) {
+                if (ListOps.length(evargs) != 2) {
+                    throw new EvaluationError("WrongNumberOfArguments");
+                }
+
+                SExpression sExpression = evargs;
+                SExpression params = ListOps.nth(sExpression, 0);
+                SExpression body = ListOps.nth(sExpression, 1).eval(env);
+                if (!isList(params)) {
+                    throw new EvaluationError("NoList");
+                }
+
+                return Symbol.NIL;
+            }
+
+            private boolean isList(SExpression list) {
+                return list.equals(Symbol.NIL) || list instanceof ConsCell;
+            }
+        });
     }
 }
