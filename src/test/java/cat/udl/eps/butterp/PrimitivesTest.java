@@ -195,19 +195,10 @@ public class PrimitivesTest {
 
     @Test
     public void lambda_environment() {
-        assertEvalTo("(define two (lambda (x) x))", "nil");
-        assertEvalTo("(define x 2)", "nil");
-        assertEvalTo("(two x)", "2");
-        assertEvalTo("(define y 1)", "nil");
-        assertEvalTo("(two 1)", "1");
+        assertEvalTo("(define var 5)", "nil");
+        assertEvalTo("((lambda (var) var) 10)", "10");
+        assertEvalTo("var", "5");
     }
-
-    @Test
-    public void lambda_environment2() {
-        assertEvalTo("(define tres 3)", "nil");
-        assertEvalTo("((lambda (x) ((lambda (tres) (add tres -3)) (add x tres))) 10)", "10");
-    }
-
 
     @Test(expected = EvaluationError.class)
     public void eq_no_args() {
