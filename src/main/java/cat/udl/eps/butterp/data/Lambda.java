@@ -16,26 +16,26 @@ public class Lambda extends Function {
 
     @Override
     public SExpression apply(SExpression evargs, Environment callingEnv) {
-        if (definitionEnv == callingEnv) System.out.println("good");
         if (ListOps.length(evargs) != ListOps.length(params)) {
             throw new EvaluationError("WrongNumberOfArguments");
         }
 
+        Environment newEnv = this.definitionEnv.extend();
+
         if (!params.equals(Symbol.NIL)) { // has params
             ConsCell evargsList = (ConsCell) evargs;
-            bindParams(evargsList);
+            bindParams(evargsList, newEnv);
         }
 
-        return body.eval(definitionEnv);
+        return body.eval(newEnv);
     }
 
-    private void bindParams(ConsCell evargs) {
-        System.out.println(evargs);
+    private void bindParams(ConsCell evargs, Environment env) {
         for (int i = 0; i < ListOps.length(evargs); i++) {
             Symbol param = (Symbol) ListOps.nth(params, i);
             System.out.println("-> "+ListOps.nth(evargs, i));
             SExpression value = ListOps.nth(evargs, i);
-            definitionEnv.bind(param, value);
+            env.bind(param, value);
         }
     }
 }
