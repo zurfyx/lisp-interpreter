@@ -16,7 +16,6 @@ public class Lambda extends Function {
 
     @Override
     public SExpression apply(SExpression evargs, Environment callingEnv) {
-        if (definitionEnv == callingEnv) System.out.println("good");
         if (ListOps.length(evargs) != ListOps.length(params)) {
             throw new EvaluationError("WrongNumberOfArguments");
         }
@@ -30,7 +29,6 @@ public class Lambda extends Function {
     }
 
     private void bindParams(ConsCell evargs) {
-        System.out.println(evargs);
         for (int i = 0; i < ListOps.length(evargs); i++) {
             Symbol param = (Symbol) ListOps.nth(params, i);
             System.out.println("-> "+ListOps.nth(evargs, i));
