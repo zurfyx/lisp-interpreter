@@ -20,22 +20,20 @@ public class Lambda extends Function {
             throw new EvaluationError("WrongNumberOfArguments");
         }
 
-        Environment newEnv = this.definitionEnv.extend();
-
         if (!params.equals(Symbol.NIL)) { // has params
             ConsCell evargsList = (ConsCell) evargs;
-            bindParams(evargsList, newEnv);
+            bindParams(evargsList);
         }
 
-        return body.eval(newEnv);
+        return body.eval(definitionEnv);
     }
 
-    private void bindParams(ConsCell evargs, Environment env) {
+    private void bindParams(ConsCell evargs) {
         for (int i = 0; i < ListOps.length(evargs); i++) {
             Symbol param = (Symbol) ListOps.nth(params, i);
             System.out.println("-> "+ListOps.nth(evargs, i));
             SExpression value = ListOps.nth(evargs, i);
-            env.bind(param, value);
+            definitionEnv.bind(param, value);
         }
     }
 }

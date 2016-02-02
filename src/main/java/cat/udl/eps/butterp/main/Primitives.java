@@ -150,6 +150,18 @@ public class Primitives {
             }
         });
 
+        env.bindGlobal(new Symbol("eval"), new Function() {
+            @Override
+            public SExpression apply(SExpression evargs, Environment env) {
+                if (ListOps.length(evargs) != 1) {
+                    throw new EvaluationError("WrongNumberOfArguments");
+                }
+
+                ConsCell consCell = (ConsCell) evargs;
+                return consCell.car.eval(env);
+            }
+        });
+
         env.bindGlobal(new Symbol("define"), new Special() {
             @Override
             public SExpression applySpecial(SExpression evargs, Environment env) {
