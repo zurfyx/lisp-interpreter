@@ -11,7 +11,7 @@ public class Lambda extends Function {
     public Lambda(SExpression params, SExpression body, Environment definitionEnv) {
         this.params = params;
         this.body = body;
-        this.definitionEnv = definitionEnv; // this should be extended of definitionEnv
+        this.definitionEnv = definitionEnv.extend();
     }
 
     @Override
