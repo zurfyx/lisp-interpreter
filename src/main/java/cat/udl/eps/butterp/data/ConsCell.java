@@ -14,7 +14,6 @@ public class ConsCell implements SExpression {
 
     @Override
     public SExpression eval(Environment env) {
-        System.out.println(car);
         SExpression carSExpression = car.eval(env); // (i.e. func. add)
         if (carSExpression instanceof Function) {
             return evalFunction((Function) carSExpression, env);
