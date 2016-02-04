@@ -29,7 +29,7 @@ public class ListOps {
         if (index >= elems.size()) {
             return Symbol.NIL;
         }
-        return new ConsCell(elems.get(index), list(elems, index+1));
+        return ListOps.cons(elems.get(index), list(elems, index+1));
     }
 
     public static int length(SExpression sexpr) {

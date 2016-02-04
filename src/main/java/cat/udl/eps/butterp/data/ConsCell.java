@@ -19,13 +19,12 @@ public class ConsCell implements SExpression {
             return evalFunction((Function) carSExpression, env);
         } else if (carSExpression instanceof Special) {
             return evalSpecial((Special) carSExpression, env);
-        } else {
-            throw new EvaluationError("CannotApply");
         }
+        throw new EvaluationError("Expected first member to be Function or Special");
     }
 
     private SExpression evalFunction(Function function, Environment env) {
-        SExpression cdrEvaluated = evalFunctionElements(cdr, env);
+        SExpression cdrEvaluated = evalFunctionElements(cdr, env); // func. evaluate all their members before applying
         return function.apply(cdrEvaluated, env);
     }
 
