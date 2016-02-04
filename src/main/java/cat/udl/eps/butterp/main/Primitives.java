@@ -16,26 +16,28 @@ public class Primitives {
         env.bindGlobal(new Symbol("add"), new Function() {
             @Override
             public SExpression apply(SExpression evargs, Environment env) {
+                //check arguments
+                if (!ListOps.isListOf(evargs, Integer.class)) {
+                    throw new EvaluationError("ADD should get only integer arguments.");
+                }
+
+                return applyAdd(evargs);
+            }
+
+            private SExpression applyAdd(SExpression evargs) {
                 if (evargs.equals(Symbol.NIL)) {
                     return new Integer(0);
                 }
 
                 ConsCell consCell = (ConsCell) evargs;
                 SExpression value = consCell.car;
-                return sum(value, apply(consCell.cdr, env), env);
+                return sum(value, applyAdd(consCell.cdr));
             }
 
-            private SExpression sum(SExpression x, SExpression y, Environment env) {
-                int xInt = castInteger(x, env);
-                int yInt = castInteger(y, env);
+            private SExpression sum(SExpression x, SExpression y) {
+                int xInt = ((Integer) x).value;
+                int yInt = ((Integer) y).value;
                 return new Integer(xInt + yInt);
-            }
-
-            private int castInteger(SExpression sExpression, Environment env) {
-                if (!(sExpression instanceof Integer)) {
-                    throw new EvaluationError("NotInteger");
-                }
-                return ((Integer) sExpression).value;
             }
         });
 
@@ -44,28 +46,20 @@ public class Primitives {
         env.bindGlobal(new Symbol("apply"), new Function() {
             @Override
             public SExpression apply(SExpression evargs, Environment env) {
+                // check arguments
                 if (ListOps.length(evargs) != 2) {
-                    throw new EvaluationError("WrongNumberOfArguments");
+                    throw new EvaluationError("APPLY should get two arguments.");
+                }
+                if (!(ListOps.nth(evargs, 0) instanceof Function)) {
+                    throw new EvaluationError("First arg of APPLY should be a function.");
+                }
+                if (!ListOps.nth(evargs, 1).equals(Symbol.NIL) && (!(ListOps.nth(evargs, 1) instanceof ConsCell))) {
+                    throw new EvaluationError("Second arg of APPLY should be a list.");
                 }
 
-                Function fun = castFunction(ListOps.nth(evargs, 0));
-                SExpression args = castList(ListOps.nth(evargs, 1));
-
+                Function fun = (Function) ListOps.nth(evargs, 0);
+                SExpression args = ListOps.nth(evargs, 1);
                 return fun.apply(args, env);
-            }
-
-            private Function castFunction(SExpression sExpression) {
-                if (!(sExpression instanceof Function)) {
-                    throw new EvaluationError("NotFunction");
-                }
-                return (Function) sExpression;
-            }
-
-            private SExpression castList(SExpression sExpression) {
-                if (sExpression != Symbol.NIL && !(sExpression instanceof ConsCell)) {
-                    throw new EvaluationError("NotList");
-                }
-                return sExpression;
             }
         });
 
@@ -73,43 +67,32 @@ public class Primitives {
         env.bindGlobal(new Symbol("car"), new Function() {
             @Override
             public SExpression apply(SExpression evargs, Environment env) {
+                // check arguments
                 if (ListOps.length(evargs) != 1) {
-                    throw new EvaluationError("WrongNumberOfArguments");
+                    throw new EvaluationError("CAR needs an argument.");
+                }
+                if (!(ListOps.nth(evargs, 0) instanceof ConsCell)) {
+                    throw new EvaluationError("CAR needs a list argument.");
                 }
 
-                ConsCell consCell = (ConsCell) evargs;
-                SExpression list = consCell.car;
-                return getFirstElementOfList(list);
-            }
-
-            private SExpression getFirstElementOfList(SExpression list) {
-                if (!(list instanceof ConsCell)) {
-                    throw new EvaluationError("NotList");
-                }
-                return ((ConsCell)list).car;
+                return ListOps.car(ListOps.car(evargs));
             }
         });
-
 
         /* cdr: returns a list formed by all elements but first of
                 the list passed by argument */
         env.bindGlobal(new Symbol("cdr"), new Function() {
             @Override
             public SExpression apply(SExpression evargs, Environment env) {
+                // check arguments
                 if (ListOps.length(evargs) != 1) {
-                    throw new EvaluationError("WrongNumberOfArguments");
+                    throw new EvaluationError("CDR needs an argument.");
+                }
+                if (!(ListOps.nth(evargs, 0) instanceof ConsCell)) {
+                    throw new EvaluationError("CDR needs a list argument.");
                 }
 
-                ConsCell consCell = (ConsCell) evargs;
-                SExpression list = consCell.car;
-                return getAllElementsButFirstOfList(list);
-            }
-
-            public SExpression getAllElementsButFirstOfList(SExpression list) {
-                if (!(list instanceof ConsCell)) {
-                    throw new EvaluationError("NotList");
-                }
-                return ((ConsCell)list).cdr;
+                return ListOps.cdr(ListOps.car(evargs));
             }
         });
 
@@ -118,26 +101,17 @@ public class Primitives {
         env.bindGlobal(new Symbol("cons"), new Function() {
             @Override
             public SExpression apply(SExpression evargs, Environment env) {
+                // check arguments
                 if (ListOps.length(evargs) != 2) {
-                    throw new EvaluationError("WrongNumberOfArguments");
+                    throw new EvaluationError("CONS needs two arguments.");
+                }
+                if (!ListOps.nth(evargs, 1).equals(Symbol.NIL) && (!(ListOps.nth(evargs, 1) instanceof ConsCell))) {
+                    throw new EvaluationError("CONS second argument should be list.");
                 }
 
-                ConsCell consCell = (ConsCell) evargs;
-                SExpression newElement = consCell.car;
-                SExpression list = ((ConsCell)consCell.cdr).car;
-
-                return addElementToList(newElement, list);
-            }
-
-            private boolean isList(SExpression list) {
-                return list.equals(Symbol.NIL) || list instanceof ConsCell;
-            }
-
-            private SExpression addElementToList(SExpression element, SExpression list) {
-                if (!isList(list)) {
-                    throw new EvaluationError("SecondArgumentIsNotList");
-                }
-                return new ConsCell(element, list);
+                SExpression newElement = ListOps.car(evargs);
+                SExpression list = ListOps.car(ListOps.cdr(evargs));
+                return ListOps.cons(newElement, list);
             }
         });
 
@@ -145,14 +119,13 @@ public class Primitives {
         env.bindGlobal(new Symbol("eq"), new Function() {
             @Override
             public SExpression apply(SExpression evargs, Environment env) {
+                //check arguments
                 if (ListOps.length(evargs) != 2) {
-                    throw new EvaluationError("WrongNumberOfArguments");
+                    throw new EvaluationError("EQ needs two arguments.");
                 }
 
-                ConsCell consCell = (ConsCell) evargs;
-                SExpression firstVal = consCell.car;
-                SExpression secondVal = ((ConsCell)consCell.cdr).car;
-
+                SExpression firstVal = ListOps.car(evargs);
+                SExpression secondVal = ListOps.car(ListOps.cdr(evargs));
                 return firstVal.equals(secondVal) ? Symbol.TRUE : Symbol.NIL;
             }
         });
@@ -161,12 +134,12 @@ public class Primitives {
         env.bindGlobal(new Symbol("eval"), new Function() {
             @Override
             public SExpression apply(SExpression evargs, Environment env) {
+                // check arguments
                 if (ListOps.length(evargs) != 1) {
-                    throw new EvaluationError("WrongNumberOfArguments");
+                    throw new EvaluationError("EVAL should get only one argument.");
                 }
 
-                ConsCell consCell = (ConsCell) evargs;
-                return consCell.car.eval(env);
+                return ListOps.car(evargs).eval(env);
             }
         });
 
@@ -182,26 +155,28 @@ public class Primitives {
         env.bindGlobal(new Symbol("mult"), new Function() {
             @Override
             public SExpression apply(SExpression evargs, Environment env) {
+                //check arguments
+                if (!ListOps.isListOf(evargs, Integer.class)) {
+                    throw new EvaluationError("MULT should get only integer arguments.");
+                }
+
+                return applyMult(evargs);
+            }
+
+            private SExpression applyMult(SExpression evargs) {
                 if (evargs.equals(Symbol.NIL)) {
                     return new Integer(1);
                 }
 
                 ConsCell consCell = (ConsCell) evargs;
                 SExpression value = consCell.car;
-                return mult(value, apply(consCell.cdr, env), env);
+                return mult(value, applyMult(consCell.cdr));
             }
 
-            private SExpression mult(SExpression x, SExpression y, Environment env) {
-                int xInt = castInteger(x, env);
-                int yInt = castInteger(y, env);
+            private SExpression mult(SExpression x, SExpression y) {
+                int xInt = ((Integer) x).value;
+                int yInt = ((Integer) y).value;
                 return new Integer(xInt * yInt);
-            }
-
-            private int castInteger(SExpression sExpression, Environment env) {
-                if (!(sExpression instanceof Integer)) {
-                    throw new EvaluationError("NotInteger");
-                }
-                return ((Integer) sExpression).value;
             }
         });
 
@@ -212,26 +187,22 @@ public class Primitives {
         env.bindGlobal(new Symbol("define"), new Special() {
             @Override
             public SExpression applySpecial(SExpression evargs, Environment env) {
+                //check arguments
                 if (ListOps.length(evargs) != 2) {
-                    throw new EvaluationError("WrongNumberOfArguments");
+                    throw new EvaluationError("DEFINE should have two arguments.");
+                }
+                if (!(ListOps.nth(evargs, 0) instanceof Symbol)) {
+                    throw new EvaluationError("DEFINE's first argument should be a symbol.");
                 }
 
-                ConsCell consCell = (ConsCell) evargs;
-                Symbol key = castSymbol(consCell.car);
-                SExpression value = ((ConsCell)consCell.cdr).car.eval(env);
-
-                //save definition
-                env.bindGlobal(key, value);
-
-                return Symbol.NIL;
+                Symbol key = (Symbol) ListOps.nth(evargs, 0);
+                SExpression value = ListOps.car(ListOps.cdr(evargs)).eval(env);
+                return saveDefinition(key, value, env);
             }
 
-            private Symbol castSymbol(SExpression sExpression) {
-                if (!(sExpression instanceof Symbol)) {
-                    throw new EvaluationError("NotSymbol");
-                }
-
-                return (Symbol) sExpression;
+            private SExpression saveDefinition(Symbol key, SExpression value, Environment env) {
+                env.bindGlobal(key, value);
+                return Symbol.NIL;
             }
         });
 
@@ -239,17 +210,21 @@ public class Primitives {
         env.bindGlobal(new Symbol("if"), new Special() {
             @Override
             public SExpression applySpecial(SExpression args, Environment env) {
+                // check arguments
                 if (ListOps.length(args) != 3) {
-                    throw new EvaluationError("WrongNumberOfArguments");
+                    throw new EvaluationError("APPLY should get two arguments.");
                 }
 
-                ConsCell consCell = (ConsCell) args;
-                SExpression condition = consCell.car.eval(env);
-                if (!(condition.equals(Symbol.NIL))) {
-                    return ListOps.nth(consCell, 1).eval(env);
-                } else {
-                    return ListOps.nth(consCell, 2).eval(env);
-                }
+
+                SExpression condition = ListOps.nth(args, 0);
+                SExpression conditionTrue = ListOps.nth(args, 1);
+                SExpression conditionFalse = ListOps.nth(args, 2);
+                return applyIf(condition, conditionTrue, conditionFalse, env);
+            }
+
+            private SExpression applyIf(SExpression condition, SExpression conditionTrue, SExpression conditionFalse,
+                                        Environment env) {
+                return (condition.eval(env).equals(Symbol.NIL)) ? conditionFalse.eval(env) : conditionTrue.eval(env);
             }
         });
 
@@ -258,22 +233,20 @@ public class Primitives {
         env.bindGlobal(new Symbol("lambda"), new Special() {
             @Override
             public SExpression applySpecial(SExpression evargs, Environment env) {
+                // check arguments
                 if (ListOps.length(evargs) != 2) {
-                    throw new EvaluationError("WrongNumberOfArguments");
+                    throw new EvaluationError("LAMBDA needs two args.");
+                }
+                if (!ListOps.nth(evargs, 0).equals(Symbol.NIL) && (!(ListOps.nth(evargs, 0) instanceof ConsCell))) {
+                    throw new EvaluationError("LAMBDA params should be a list of symbols.");
+                }
+                if (!ListOps.isListOf(ListOps.car(evargs), Symbol.class)) {
+                    throw new EvaluationError("LAMBDA params should be a list of symbols.");
                 }
 
-                SExpression sExpression = evargs;
-                SExpression params = ListOps.nth(sExpression, 0);
-                SExpression body = ListOps.nth(sExpression, 1);
-                if (!isList(params)) { // || !isNotListOfSymbols(params)
-                    throw new EvaluationError("NoList");
-                }
-
+                SExpression params = ListOps.nth(evargs, 0);
+                SExpression body = ListOps.nth(evargs, 1);
                 return createLambda(params, body, env);
-            }
-
-            private boolean isList(SExpression list) {
-                return list.equals(Symbol.NIL) || list instanceof ConsCell;
             }
 
             private Lambda createLambda(SExpression params, SExpression body, Environment env) {
@@ -286,10 +259,10 @@ public class Primitives {
             @Override
             public SExpression applySpecial(SExpression evargs, Environment env) {
                 if (ListOps.length(evargs) != 1) {
-                    throw new EvaluationError("WrongNumberOfArguments");
+                    throw new EvaluationError("QUOTE needs an argument.");
                 }
 
-                return ((ConsCell)evargs).car;
+                return ListOps.car(evargs);
             }
         });
     }

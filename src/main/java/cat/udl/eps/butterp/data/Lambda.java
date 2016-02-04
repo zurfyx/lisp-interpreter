@@ -17,7 +17,7 @@ public class Lambda extends Function {
     @Override
     public SExpression apply(SExpression evargs, Environment callingEnv) {
         if (ListOps.length(evargs) != ListOps.length(params)) {
-            throw new EvaluationError("WrongNumberOfArguments");
+            throw new EvaluationError("Incorrect number of args in the call.");
         }
 
         if (!params.equals(Symbol.NIL)) { // has params

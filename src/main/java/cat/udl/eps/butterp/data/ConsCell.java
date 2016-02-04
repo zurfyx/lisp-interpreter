@@ -20,7 +20,7 @@ public class ConsCell implements SExpression {
         } else if (carSExpression instanceof Special) {
             return evalSpecial((Special) carSExpression, env);
         }
-        throw new EvaluationError("Expected first member to be Function or Special");
+        throw new EvaluationError("Cannot apply " + carSExpression + ".");
     }
 
     private SExpression evalFunction(Function function, Environment env) {

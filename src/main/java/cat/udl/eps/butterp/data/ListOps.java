@@ -37,8 +37,7 @@ public class ListOps {
             return 0;
         }
 
-        ConsCell consCell = (ConsCell) sexpr;
-        return 1 + length(consCell.cdr);
+        return 1 + length(ListOps.cdr(sexpr));
     }
 
     public static SExpression nth(SExpression sexpr, int n) {

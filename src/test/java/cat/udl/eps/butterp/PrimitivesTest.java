@@ -135,6 +135,11 @@ public class PrimitivesTest {
         assertEvalFails("(cons nil 2)");
     }
 
+    @Test
+    public void cons_add_nil_to_empty_list() {
+        assertEvalTo("(cons nil nil)", "(nil)");
+    }
+
     @Test public void cons_to_nil() {
         SExpression sexpr = Parser.parse(("(cons 1 nil)"));
         SExpression expected = Parser.parse("(1)");
