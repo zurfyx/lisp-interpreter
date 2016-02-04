@@ -1,8 +1,6 @@
 package cat.udl.eps.butterp;
 
-import cat.udl.eps.butterp.data.EvaluationError;
-import cat.udl.eps.butterp.data.SExpression;
-import cat.udl.eps.butterp.data.Symbol;
+import cat.udl.eps.butterp.data.*;
 import cat.udl.eps.butterp.environment.Environment;
 import cat.udl.eps.butterp.environment.NestedMap;
 import cat.udl.eps.butterp.main.Primitives;

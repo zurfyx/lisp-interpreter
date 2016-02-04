@@ -47,7 +47,12 @@ public class ListOps {
     }
 
     public static boolean isListOf(SExpression params, Class<?> klass) {
-        throw new UnsupportedOperationException("not implemented yet");
+        for (int i = 0; i < ListOps.length(params); i++) {
+            if (!(ListOps.nth(params, i).getClass().isAssignableFrom(klass))) {
+                return false;
+            }
+        }
+        return true;
     }
 
 }
