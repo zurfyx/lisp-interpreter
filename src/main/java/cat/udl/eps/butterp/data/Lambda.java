@@ -31,7 +31,6 @@ public class Lambda extends Function {
     private void bindParams(ConsCell evargs) {
         for (int i = 0; i < ListOps.length(evargs); i++) {
             Symbol param = (Symbol) ListOps.nth(params, i);
-            System.out.println("-> "+ListOps.nth(evargs, i));
             SExpression value = ListOps.nth(evargs, i);
             definitionEnv.bind(param, value);
         }
