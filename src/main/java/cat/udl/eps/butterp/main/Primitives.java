@@ -237,10 +237,8 @@ public class Primitives {
                 if (ListOps.length(evargs) != 2) {
                     throw new EvaluationError("LAMBDA needs two args.");
                 }
-                if (!ListOps.nth(evargs, 0).equals(Symbol.NIL) && (!(ListOps.nth(evargs, 0) instanceof ConsCell))) {
-                    throw new EvaluationError("LAMBDA params should be a list of symbols.");
-                }
-                if (!ListOps.isListOf(ListOps.car(evargs), Symbol.class)) {
+                if (!ListOps.nth(evargs, 0).equals(Symbol.NIL) && (!(ListOps.nth(evargs, 0) instanceof ConsCell)) &&
+                        (!ListOps.isListOf(ListOps.car(evargs), Symbol.class))) {
                     throw new EvaluationError("LAMBDA params should be a list of symbols.");
                 }
 
